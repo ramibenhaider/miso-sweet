@@ -1,0 +1,66 @@
+    <section>
+        <h2>إدارة معلومات التواصل (Contacts)</h2>
+
+        <form action="{{ route('contacts.update', $contact->id ?? 1) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div>
+                <label for="whatsapp">واتساب (whatsapp):</label>
+                <input type="text" id="whatsapp" name="whatsapp" value="{{ old('whatsapp', $contact->whatsapp ?? '') }}">
+                @error('whatsapp') <span style="color: red;">{{ $message }}</span> @enderror
+            </div>
+            <br>
+
+            <div>
+                <label for="phone1">الهاتف الأول (phone1):</label>
+                <input type="text" id="phone1" name="phone1" value="{{ old('phone1', $contact->phone1 ?? '') }}">
+                @error('phone1') <span style="color: red;">{{ $message }}</span> @enderror
+            </div>
+            <br>
+
+            <div>
+                <label for="phone2">الهاتف الثاني (phone2):</label>
+                <input type="text" id="phone2" name="phone2" value="{{ old('phone2', $contact->phone2 ?? '') }}">
+                @error('phone2') <span style="color: red;">{{ $message }}</span> @enderror
+            </div>
+            <br>
+
+            <div>
+                <label for="phone3">الهاتف الثالث (phone3):</label>
+                <input type="text" id="phone3" name="phone3" value="{{ old('phone3', $contact->phone3 ?? '') }}">
+                @error('phone3') <span style="color: red;">{{ $message }}</span> @enderror
+            </div>
+            <br>
+
+            <div>
+                <label for="email">البريد الإلكتروني (email):</label>
+                <input type="email" id="email" name="email" value="{{ old('email', $contact->email ?? '') }}">
+                @error('email') <span style="color: red;">{{ $message }}</span> @enderror
+            </div>
+            <br>
+
+            <div>
+                <label for="facebook">فيسبوك (facebook):</label>
+                <input type="url" id="facebook" name="facebook" value="{{ old('facebook', $contact->facebook ?? '') }}">
+                @error('facebook') <span style="color: red;">{{ $message }}</span> @enderror
+            </div>
+            <br>
+
+            <div>
+                <label for="tiktok">تيك توك (tiktok):</label>
+                <input type="url" id="tiktok" name="tiktok" value="{{ old('tiktok', $contact->tiktok ?? '') }}">
+                @error('tiktok') <span style="color: red;">{{ $message }}</span> @enderror
+            </div>
+            <br>
+
+            <div>
+                <label for="instagram">إنستغرام (instagram):</label>
+                <input type="url" id="instagram" name="instagram" value="{{ old('instagram', $contact->instagram ?? '') }}">
+                @error('instagram') <span style="color: red;">{{ $message }}</span> @enderror
+            </div>
+            <br>
+
+            <button type="submit">حفظ بيانات التواصل</button>
+        </form>
+    </section>
