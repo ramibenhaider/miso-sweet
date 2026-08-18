@@ -19,7 +19,7 @@
     <!-- 1. نموذج إضافة منتج جديد -->
     <section>
         <h2>إضافة منتج جديد</h2>
-        <form action="#" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div>
                 <label for="name">اسم المنتج:</label>
@@ -100,6 +100,15 @@
                     </div>
                     <br>
                 @endif
+                @if ($product->product_photos && $product->product_photos->count() > 0)
+                    <div>
+                        <strong>الصور الإضافية الحالية:</strong><br>
+                        @foreach ($product->product_photos as $photo)
+                            <img src="{{ asset('storage/' . $photo->photo) }}" alt="{{ $product->name }}" width="120" style="margin-left: 5px; margin-bottom: 5px;">
+                        @endforeach
+                    </div>
+                    <br>
+                @endif
 
                 <!-- نموذج التعديل (Update Product) -->
                 <form action="#" method="POST" enctype="multipart/form-data">
@@ -162,7 +171,7 @@
                 <br>
 
                 <!-- نموذج الحذف (Delete Product) -->
-                <form action="#" method="POST" style="display:inline;">
+                <form action="{{ route('product.destroy', $product->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
                     <button type="submit" onclick="return confirm('هل أنت تأكد من حذف هذا المنتج؟')">حذف المنتج</button>

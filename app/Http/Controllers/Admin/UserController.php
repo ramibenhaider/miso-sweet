@@ -62,7 +62,11 @@ class UserController extends Controller
      */
     public function toggleStatus(User $user)
     {
-        $user->is_active = !$user->is_active;
+        if ($user->is_active == true) {
+            $user->is_active = false;
+        } else {
+            $user->is_active = true;
+        }
         $user->save();
         return redirect()->back()->with('success', 'تم تغيير حالة المستخدم بنجاح');
     }

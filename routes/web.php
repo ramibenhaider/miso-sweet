@@ -16,7 +16,8 @@ use App\Http\Controllers\Admin\UserController;
 Route::get('/', function () {return view('login');})->name('login');
 Route::get('/register', function () {return view('register');})->name('register');
 Route::post('/login', [loginController::class, 'doLogin'])->name('doLogin');
-Route::get('/home', function () {return view('home');})->name('home');
+Route::post('/logout', [loginController::class, 'logout'])->name('logout');
+Route::get('/home', function () {return view('user.home');})->name('home');
 
 Route::post('/register', [RegistrationController::class, 'store'])->name('register');
 
@@ -30,7 +31,7 @@ Route::middleware('auth')->group(function () {
         ->name('verification.verify');
 
     Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])
-        ->middleware('throttle:6,1')
+        ->middleware('throttle:4,3')
         ->name('verification.send');
 });
 
@@ -41,7 +42,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('messages', MessageController::class);
     Route::resource('users', UserController::class);
     Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
-    Route::resource('products', ProductController::class);
+    Route::resource('product', ProductController::class);
 });
 
 
@@ -51,7 +52,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
         ->name('password.request');
 
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
-        ->middleware('throttle:6,1')
+        ->middleware('throttle:4,3')
         ->name('password.email');
 
     Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetPasswordForm'])

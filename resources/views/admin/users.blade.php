@@ -47,7 +47,7 @@
                     <td>{{ $user->created_at }}</td>
                     <td>
                         <!-- تغيير حالة الحساب (Change Status operation) -->
-                        <form action="#" method="POST" style="display:inline;">
+                        <form action="{{ route('users.toggle-status', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('PATCH')
                             <button type="submit">
@@ -56,7 +56,7 @@
                         </form>
 
                         <!-- نموذج حذف المستخدم (Delete operation) -->
-                        <form action="#" method="POST" style="display:inline;">
+                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" onclick="return confirm('هل أنت تأكد من حذف هذا المستخدم؟')">حذف</button>

@@ -26,8 +26,18 @@ class loginController extends Controller
             return redirect()->route('categories-contacts');
         }else if(Auth::attempt($credintials) === true && Auth::user()->email_verified_at != null){
             return redirect()->route('home');
+        }else if(Auth::attempt($credintials) === true && !Auth::user()->is_active){
+            return redirect()->back()->with('error', 'الحساب غير مفعل');
         }else {
             return redirect()->back()->with('error', 'البريد الإلكتروني أو كلمة المرور غير صحيحة!');
         }
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login')->with('success', 'تم تسجيل الخروج بنجاح.');
     }
 }

@@ -5,7 +5,13 @@
     <title>لوحة التحكم - Admin Dashboard</title>
 </head>
 <body>
-    <h1>لوحة التحكم (Admin Dashboard)</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1>لوحة التحكم (Admin Dashboard)</h1>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" style="padding: 8px 16px; background-color: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">تسجيل الخروج</button>
+        </form>
+    </div>
 
     {{-- عرض الرسائل الناجحة أو الأخطاء --}}
     @if (session('success'))

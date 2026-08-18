@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -14,7 +15,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::orderByDesc('created_at')->get();
+        $products = Product::with('product_photos')->orderByDesc('created_at')->get();
         $categories = Category::all();
         return view('admin.products', compact('products', 'categories'));
     }
@@ -30,9 +31,36 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $data['is_available'] = $request->boolean('is_available');
+
+        $product = Product::create([
+            'name' => $data['name'],
+            'price' => $data['price'],
+            'category_id' => $data['category_id'],
+            'description' => $data['description'],
+            'image' => $data['image'],
+            'is_available' => $data['is_available'],
+        ]);
+
+        
+        if ($request->hasFile('other_photos')) {
+            foreach ($request->file('other_photos') as $photo) {
+                $photoPath = $photo->store('products/photos', 'public');
+                $product->product_photos()->create([
+                    'photo' => $photoPath,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'تم إضافة المنتج بنجاح');
     }
 
     /**
