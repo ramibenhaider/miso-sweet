@@ -13,7 +13,7 @@
         <p style="color: red;">{{ session('error') }}</p>
     @endif
 
-    <form action="{{ route('users.update', auth()->id()) }}" method="POST">
+    <form action="{{ route('profile.update', $user) }}" method="POST">
         @csrf
         @method('PUT')
 
@@ -25,14 +25,14 @@
         <br>
 
         <div>
-            <label for="email">البريد الإلكتروني:</label>
-            <input type="email" id="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required>
-            @error('email') <span style="color: red;">{{ $message }}</span> @enderror
+            <label for="current_password">كلمة المرور الحالية:</label>
+            <input type="password" id="current_password" name="current_password">
+            @error('current_password') <span style="color: red;">{{ $message }}</span> @enderror
         </div>
         <br>
 
         <div>
-            <label for="password">كلمة المرور الجديدة (أتركها فارغة إذا لم ترد التغيير):</label>
+            <label for="password">كلمة المرور الجديدة :</label>
             <input type="password" id="password" name="password">
             @error('password') <span style="color: red;">{{ $message }}</span> @enderror
         </div>

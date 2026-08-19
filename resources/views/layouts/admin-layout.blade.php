@@ -19,7 +19,7 @@
 
         <div>
             @auth
-                <a href="{{ Route::has('profile.edit', auth()->id()) ? route('profile.edit', auth()->id()) : '#' }}">تعديل البروفايل ({{ auth()->user()->name }})</a>
+                <a href="{{ route('profile.edit', auth()->user()->id) }}">تعديل البروفايل ({{ auth()->user()->name }})</a>
 
                 <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                     @csrf

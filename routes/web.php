@@ -20,7 +20,9 @@ Route::get('/register', function () {return view('register');})->name('register'
 Route::post('/login', [loginController::class, 'doLogin'])->name('doLogin');
 Route::post('/logout', [loginController::class, 'logout'])->name('logout');
 Route::get('/home', function () {return view('user.home');})->name('home');
-Route::resource('profile', ProfileController::class)->only('edit', 'update');
+Route::get('/profile/{user}', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile/{user}', [ProfileController::class, 'update'])->name('profile.update');
+
 
 Route::post('/register', [RegistrationController::class, 'store'])->name('register');
 
