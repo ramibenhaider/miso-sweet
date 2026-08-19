@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -72,19 +74,35 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Product $product)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        $new_data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $new_data['image'] = $request->file('image')->store('products', 'public');
+        } else {
+            unset($new_data['image']);
+        }
+
+        $new_data['is_available'] = $request->boolean('is_available');
+
+        $product->update($new_data);
+
+        if ($request->hasFile('other_photos')) {
+            foreach ($request->file('other_photos') as $photo) {
+                $photoPath = $photo->store('products/photos', 'public');
+                $product->product_photos()->create([
+                    'photo' => $photoPath,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'تم تحديث المنتج بنجاح');
     }
 
     /**

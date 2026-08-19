@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>إدارة الرسائل - Messages</title>
-</head>
-<body>
+@extends('layouts.admin-layout')
+
+@section('title', 'إدارة الرسائل - Messages')
+
+@section('content')
     <h1>إدارة الرسائل (Messages)</h1>
 
     @if (session('success'))
@@ -48,5 +46,4 @@
     @empty
         <p>لا توجد رسائل واردة حتى الآن.</p>
     @endforelse
-</body>
-</html>
+@endsection

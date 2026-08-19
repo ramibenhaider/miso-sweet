@@ -12,12 +12,15 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ProductPhotoController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', function () {return view('login');})->name('login');
 Route::get('/register', function () {return view('register');})->name('register');
 Route::post('/login', [loginController::class, 'doLogin'])->name('doLogin');
 Route::post('/logout', [loginController::class, 'logout'])->name('logout');
 Route::get('/home', function () {return view('user.home');})->name('home');
+Route::resource('profile', ProfileController::class)->only('edit', 'update');
 
 Route::post('/register', [RegistrationController::class, 'store'])->name('register');
 
@@ -37,12 +40,13 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/categories-contacts', [DashboardController::class, 'index'])->name('categories-contacts');
+    Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::resource('category', CategoryController::class)->only('update', 'store', 'destroy');
     Route::resource('contact', ContactController::class)->only('update');
     Route::resource('messages', MessageController::class);
     Route::resource('users', UserController::class);
-    Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
     Route::resource('product', ProductController::class);
+    Route::resource('product-photo', ProductPhotoController::class);
 });
 
 

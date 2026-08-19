@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>إدارة المستخدمين - Users</title>
-</head>
-<body>
+@extends('layouts.admin-layout')
+
+@section('title', 'إدارة المستخدمين - Users')
+
+@section('content')
     <h1>إدارة المستخدمين (Users)</h1>
 
     @if (session('success'))
@@ -46,7 +44,6 @@
                     </td>
                     <td>{{ $user->created_at }}</td>
                     <td>
-                        <!-- تغيير حالة الحساب (Change Status operation) -->
                         <form action="{{ route('users.toggle-status', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('PATCH')
@@ -55,7 +52,6 @@
                             </button>
                         </form>
 
-                        <!-- نموذج حذف المستخدم (Delete operation) -->
                         <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
@@ -70,5 +66,4 @@
             @endforelse
         </tbody>
     </table>
-</body>
-</html>
+@endsection

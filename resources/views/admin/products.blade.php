@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>إدارة المنتجات - Products</title>
-</head>
-<body>
+@extends('layouts.admin-layout')
+
+@section('title', 'إدارة المنتجات - Products')
+
+@section('content')
     <h1>إدارة المنتجات (Products)</h1>
 
     @if (session('success'))
@@ -16,21 +14,20 @@
 
     <hr>
 
-    <!-- 1. نموذج إضافة منتج جديد -->
     <section>
         <h2>إضافة منتج جديد</h2>
         <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div>
                 <label for="name">اسم المنتج:</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+                <input type="text" id="name" name="name" required>
                 @error('name') <span style="color: red;">{{ $message }}</span> @enderror
             </div>
             <br>
 
             <div>
                 <label for="price">السعر:</label>
-                <input type="number" step="0.01" id="price" name="price" value="{{ old('price') }}" required>
+                <input type="number" step="0.01" id="price" name="price" required>
                 @error('price') <span style="color: red;">{{ $message }}</span> @enderror
             </div>
             <br>
@@ -51,14 +48,14 @@
 
             <div>
                 <label for="description">وصف المنتج:</label>
-                <textarea id="description" name="description">{{ old('description') }}</textarea>
+                <textarea id="description" name="description"></textarea>
                 @error('description') <span style="color: red;">{{ $message }}</span> @enderror
             </div>
             <br>
 
             <div>
                 <label for="is_available">
-                    <input type="checkbox" id="is_available" name="is_available" value="1" {{ old('is_available', true) ? 'checked' : '' }}>
+                    <input type="checkbox" id="is_available" name="is_available" value="1">
                     المنتج متوفر؟
                 </label>
             </div>
@@ -84,15 +81,13 @@
 
     <br><hr><br>
 
-    <!-- 2. عرض المنتجات على شكل كروت مع مدخلات التعديل والحذف -->
     <section>
         <h2>قائمة المنتجات الحالية</h2>
 
         @forelse ($products ?? [] as $product)
             <div style="border: 1px solid #000; padding: 15px; margin-bottom: 20px;">
-                <h3>كارت المنتج رقم #{{ $product->id }}</h3>
+                <h3>كارت المنتج رقم #{{ $loop->iteration }}</h3>
 
-                <!-- الصورة الرئيسية الحالية إن وجدت -->
                 @if ($product->image)
                     <div>
                         <strong>الصورة الرئيسية الحالية:</strong><br>
@@ -104,26 +99,34 @@
                     <div>
                         <strong>الصور الإضافية الحالية:</strong><br>
                         @foreach ($product->product_photos as $photo)
-                            <img src="{{ asset('storage/' . $photo->photo) }}" alt="{{ $product->name }}" width="120" style="margin-left: 5px; margin-bottom: 5px;">
+                            <div style="display: inline-block; text-align: center; margin-left: 10px;">
+                                <img src="{{ asset('storage/' . $photo->photo) }}" alt="{{ $product->name }}" width="120" style="display: block; margin-bottom: 5px;">
+                                <form action="{{ route('product-photo.destroy', $photo->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('هل أنت تأكد من حذف هذه الصورة؟')" style="color: red; border: none; background: none; cursor: pointer; text-decoration: underline;">حذف</button>
+                                </form>
+                            </div>
                         @endforeach
                     </div>
                     <br>
                 @endif
 
-                <!-- نموذج التعديل (Update Product) -->
-                <form action="#" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div>
                         <label>اسم المنتج:</label>
                         <input type="text" name="name" value="{{ old('name', $product->name) }}" required>
+                        @error('name', 'update_' . $product->id) <span style="color: red;">{{ $message }}</span> @enderror
                     </div>
                     <br>
 
                     <div>
                         <label>السعر:</label>
                         <input type="number" step="0.01" name="price" value="{{ old('price', $product->price) }}" required>
+                        @error('price', 'update_' . $product->id) <span style="color: red;">{{ $message }}</span> @enderror
                     </div>
                     <br>
 
@@ -136,12 +139,14 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('category_id', 'update_' . $product->id) <span style="color: red;">{{ $message }}</span> @enderror
                     </div>
                     <br>
 
                     <div>
                         <label>وصف المنتج:</label>
                         <textarea name="description">{{ old('description', $product->description) }}</textarea>
+                        @error('description', 'update_' . $product->id) <span style="color: red;">{{ $message }}</span> @enderror
                     </div>
                     <br>
 
@@ -150,18 +155,22 @@
                             <input type="checkbox" name="is_available" value="1" {{ $product->is_available ? 'checked' : '' }}>
                             متوفر
                         </label>
+                        @error('is_available', 'update_' . $product->id) <span style="color: red;">{{ $message }}</span> @enderror
                     </div>
                     <br>
 
                     <div>
                         <label>تغيير الصورة الرئيسية (Main Photo):</label>
                         <input type="file" name="image" accept="image/*">
+                        @error('image', 'update_' . $product->id) <span style="color: red;">{{ $message }}</span> @enderror
                     </div>
                     <br>
 
                     <div>
-                        <label>إضافة/تحديث صور إضافية (Other Photos):</label>
+                        <label>إضافة صور أخرى (Other Photos):</label>
                         <input type="file" name="other_photos[]" accept="image/*" multiple>
+                        @error('other_photos', 'update_' . $product->id) <span style="color: red;">{{ $message }}</span> @enderror
+                        @error('other_photos.*', 'update_' . $product->id) <span style="color: red;">{{ $message }}</span> @enderror
                     </div>
                     <br>
 
@@ -170,7 +179,6 @@
 
                 <br>
 
-                <!-- نموذج الحذف (Delete Product) -->
                 <form action="{{ route('product.destroy', $product->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
@@ -181,5 +189,4 @@
             <p>لا توجد منتجات مضافة بعد.</p>
         @endforelse
     </section>
-</body>
-</html>
+@endsection
