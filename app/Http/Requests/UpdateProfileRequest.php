@@ -4,8 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Hash;
 
-class registerationRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,11 +23,18 @@ class registerationRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = $this->route('user') ?? $this->user();
+
         return [
             'name' => 'required|string|max:150',
-            'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|confirmed|min:8',
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'delete_picture' => 'nullable|boolean',
+            'current_password' => ['nullable', 'required_with:password', function ($attribute, $value, $fail) use ($user) {
+                if ($value && !Hash::check($value, $user->password)) {
+                    $fail('كلمة المرور الحالية غير صحيحة');
+                }
+            }],
+            'password' => 'nullable|required_with:current_password|min:8|confirmed',
         ];
     }
 
@@ -36,17 +44,13 @@ class registerationRequest extends FormRequest
             'name.required' => 'الاسم مطلوب',
             'name.string' => 'يجب أن يكون الاسم من حروف',
             'name.max' => 'يجب ألا يتجاوز الاسم 150 حرفاً',
-            'email.required' => 'البريد الإلكتروني مطلوب',
-            'email.string' => 'يجب أن يكون البريد الإلكتروني نصاً',
-            'email.email' => 'يجب إدخال بريد إلكتروني صحيح',
-            'email.unique' => 'البريد الإلكتروني مُستخدم من قبل',
-            'password.required' => 'كلمة المرور مطلوبة',
-            'password.string' => 'يجب أن تكون كلمة المرور نصاً',
-            'password.confirmed' => 'كلمتا المرور غير متطابقتين',
-            'password.min' => 'يجب ألا تقل كلمة المرور عن 8 خانات',
             'picture.image' => 'يجب أن يكون الملف المرفق صورة',
             'picture.mimes' => 'صيغ الصور المسموح بها هي: jpeg, png, jpg, gif, svg, webp',
             'picture.max' => 'يجب ألا يتجاوز حجم الصورة 2 ميجابايت',
+            'current_password.required_with' => 'يرجى إدخال كلمة المرور الحالية لتغيير كلمة المرور',
+            'password.required_with' => 'يرجى إدخال كلمة المرور الجديدة',
+            'password.min' => 'يجب ألا تقل كلمة المرور عن 8 خانات',
+            'password.confirmed' => 'كلمتا المرور غير متطابقتين',
         ];
     }
 }

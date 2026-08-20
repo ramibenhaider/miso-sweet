@@ -12,7 +12,13 @@ class RegistrationController extends Controller
 {
     public function store(registerationRequest $request)
     {
-        $user = User::create($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('picture')) {
+            $data['picture'] = $request->file('picture')->store('users', 'public');
+        }
+
+        $user = User::create($data);
 
         event(new Registered($user));
 

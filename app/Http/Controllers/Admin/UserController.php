@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -13,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::orderByDesc('created_at')->get();
+        $users = User::orderByDesc('created_at')->where('role', 'user')->get();
         return view('admin.users', compact('users'));
     }
 
@@ -76,6 +77,9 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if ($user->picture && Storage::disk('public')->exists($user->picture)) {
+            Storage::disk('public')->delete($user->picture);
+        }
         $user->delete();
         return redirect()->back()->with('success', 'تم حذف المستخدم بنجاح');
     }

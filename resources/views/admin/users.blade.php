@@ -22,7 +22,7 @@
                 <th>#</th>
                 <th>الاسم</th>
                 <th>البريد الإلكتروني</th>
-                <th>الرتبة (Role)</th>
+                <th>الصورة</th>
                 <th>حالة الحساب (Status)</th>
                 <th>تاريخ التسجيل</th>
                 <th>الإجراءات (Actions)</th>
@@ -34,7 +34,13 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ $user->role }}</td>
+                    <td>
+                        @if($user->picture)
+                            <img src="{{ asset('storage/' . $user->picture) }}" alt="{{ $user->name }}" width="50" height="50">
+                        @else
+                            <span>لا توجد صورة</span>
+                        @endif
+                    </td>
                     <td>
                         @if ($user->is_active)
                             <span style="color: green;">نشط (Active)</span>

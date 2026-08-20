@@ -45,4 +45,13 @@ class CategoryController extends Controller
         $category->save();
         return redirect()->back()->with('success', 'تم التعديل بنجاح');
     }
+
+    public function destroy(Category $category)
+    {
+        if($category->products()->count() > 0) {
+            return redirect()->back()->with('error', 'لا يمكن حذف القسم لأنه يحتوي على منتجات');
+        }
+        $category->delete();
+        return redirect()->back()->with('success', 'تم حذف القسم بنجاح');
+    }
 }

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class loginController extends Controller
+class LoginAndLogoutController extends Controller
 {
     public function doLogin(Request $request){
        $credintials = $request->validate([
@@ -24,10 +24,10 @@ class loginController extends Controller
             return redirect()->route('verification.notice');
         }else if(Auth::attempt($credintials) === true && Auth::user()->role == 'admin'){
             return redirect()->route('categories-contacts');
-        }else if(Auth::attempt($credintials) === true && Auth::user()->email_verified_at != null){
-            return redirect()->route('home');
         }else if(Auth::attempt($credintials) === true && !Auth::user()->is_active){
             return redirect()->back()->with('error', 'الحساب غير مفعل');
+        }else if(Auth::attempt($credintials) === true && Auth::user()->email_verified_at != null){
+            return redirect()->route('home');
         }else {
             return redirect()->back()->with('error', 'البريد الإلكتروني أو كلمة المرور غير صحيحة!');
         }
@@ -38,6 +38,6 @@ class loginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('login')->with('success', 'تم تسجيل الخروج بنجاح.');
+        return redirect()->route('login');
     }
 }

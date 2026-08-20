@@ -13,9 +13,32 @@
         <p style="color: red;">{{ session('error') }}</p>
     @endif
 
-    <form action="{{ route('profile.update', $user) }}" method="POST">
+    <form action="{{ route('profile.update', $user) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
+
+        @if($user->picture)
+            <div>
+                <label>الصورة الحالية:</label><br>
+                <img src="{{ asset('storage/' . $user->picture) }}" alt="{{ $user->name }}" width="100" height="100" style="object-fit: cover; border-radius: 50%;">
+                <input type="checkbox" id="delete_picture" name="delete_picture" value="1">
+                <label for="delete_picture">حذف الصورة</label>
+            </div>
+            <br>
+        @endif
+
+        <div>
+            <label for="picture">تغيير الصورة الشخصية:</label>
+            <input type="file" id="picture" name="picture" accept="image/*">
+            @error('picture') <span style="color: red;">{{ $message }}</span> @enderror
+        </div>
+        <br>
+
+        <div>
+            <label for="email">البريد الالكتروني:</label>
+            <input type="email"value="{{ old('email', auth()->user()->email ?? '') }}" disabled>
+        </div>
+        <br>
 
         <div>
             <label for="name">اسم المستخدم:</label>
