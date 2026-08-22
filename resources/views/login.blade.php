@@ -203,6 +203,15 @@
             text-decoration: underline;
         }
 
+        .back-home-link {
+            color: var(--text-muted) !important;
+            font-weight: 500 !important;
+        }
+
+        .back-home-link:hover {
+            color: var(--accent-brown) !important;
+        }
+
         /* Responsive adjustments for mobile devices */
         @media (max-width: 480px) {
             body {
@@ -235,7 +244,9 @@
 <body>
     <div class="login-card">
         <div class="header-section">
-            <img src="{{ asset('Favicon.png') }}" alt="Logo" class="login-logo">
+            <a href="{{ route('home') }}" title="العودة للصفحة الرئيسية">
+                <img src="{{ asset('Favicon.png') }}" alt="Logo" class="login-logo">
+            </a>
             <h2>تسجيل الدخول</h2>
             <p>أهلاً بك، يرجى إدخال بيانات حسابك</p>
         </div>
@@ -282,6 +293,7 @@
         <div class="footer-links">
             <p>نسيت كلمة المرور؟ <a href="{{ route('password.request') }}">استعادة كلمة المرور</a></p>
             <p>ليس لديك حساب؟ <a href="{{ route('register') }}">تسجيل حساب جديد</a></p>
+            <p><a href="{{ route('home') }}" class="back-home-link">→ العودة إلى الصفحة الرئيسية</a></p>
         </div>
     </div>
 </body>

@@ -10,6 +10,11 @@ class Message extends Model
         'user_id',
         'message',
         'phone',
+        'is_shown',
+    ];
+
+    protected $casts = [
+        'is_shown' => 'boolean',
     ];
 
     public function user()

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('price', 6, 2);
             $table->string('image');
             $table->boolean('is_available')->default(true);
+            $table->enum('price_by', ['للكيلو', 'للقطعة', 'لم يتم التحديد'])->default('لم يتم التحديد');
             $table->foreignId('category_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

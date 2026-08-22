@@ -16,5 +16,10 @@ class Contact extends Model
         'tiktok',
         'instagram',
         'youtube',
+        'hero_video',
+        'hero_title',
+        'hero_subtitle',
+        'hero_button_text',
+        'hero_button_link',
     ];
 }

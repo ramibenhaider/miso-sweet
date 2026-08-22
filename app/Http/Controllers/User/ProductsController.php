@@ -5,20 +5,47 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\User;
-use App\Models\Product;
+use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
-        $categories = Category::all();
+        $search = trim($request->input('search', ''));
 
-        if (auth()->check() && auth()->user()->role == 'user') {
-            $user = User::where('id', auth()->id())->first();
-            return view('user.products', compact('user', 'products', 'categories'));
+        if (!empty($search)) {
+            $normalizedSearch = str_replace(['آ', 'أ', 'إ'], 'ا', $search);
+            $normalizedSearch = str_replace('ة', 'ه', $normalizedSearch);
+            $normalizedSearch = str_replace('ى', 'ي', $normalizedSearch);
+
+            $categories = Category::whereHas('products', function ($q) use ($normalizedSearch) {
+                $q->whereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, 'آ', 'ا'), 'أ', 'ا'), 'إ', 'ا'), 'ة', 'ه'), 'ى', 'ي') LIKE ?", ["%$normalizedSearch%"]);
+            })->orWhereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, 'آ', 'ا'), 'أ', 'ا'), 'إ', 'ا'), 'ة', 'ه'), 'ى', 'ي') LIKE ?", ["%$normalizedSearch%"])
+            ->with(['products' => function ($q) use ($normalizedSearch) {
+                $q->whereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, 'آ', 'ا'), 'أ', 'ا'), 'إ', 'ا'), 'ة', 'ه'), 'ى', 'ي') LIKE ?", ["%$normalizedSearch%"]);
+            }])->get();
+
+            foreach ($categories as $category) {
+                $catNameNormalized = str_replace(['آ', 'أ', 'إ', 'ة', 'ى'], ['ا', 'ا', 'ا', 'ه', 'ي'], $category->name);
+                if (mb_stripos($catNameNormalized, $normalizedSearch) !== false && $category->products->isEmpty()) {
+                    $category->load('products');
+                }
+            }
+
+            $categories = $categories->filter(function ($category) {
+                return $category->products->count() > 0;
+            });
         } else {
-            return view('user.products', compact('products', 'categories'));
+            $categories = Category::with('products')->get();
         }
+
+        $user = auth()->check() ? auth()->user() : null;
+
+        return view('user.products', compact('categories', 'user', 'search'));
+    }
+
+    public function search(Request $request)
+    {
+        return $this->index($request);
     }
 }

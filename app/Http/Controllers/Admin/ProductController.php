@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -46,6 +47,7 @@ class ProductController extends Controller
         $product = Product::create([
             'name' => $data['name'],
             'price' => $data['price'],
+            'price_by' => $data['price_by'],
             'category_id' => $data['category_id'],
             'description' => $data['description'],
             'image' => $data['image'],
@@ -70,7 +72,8 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        $product->load(['category', 'product_photos']);
+        return view('user.product-show', compact('product'));
     }
 
     /**
