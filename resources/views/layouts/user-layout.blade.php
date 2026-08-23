@@ -4,7 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'ميسو سويت')</title>
+    <title>@yield('title', 'ميسو سويت - Miso Sweet | أشهى الحلويات الطازجة')</title>
+    <meta name="google-site-verification" content="PQkDxcJ69w0b7_Qo2GrQO2gAI8mYiqXgRfzodxguNyk" />
+    <meta name="description" content="@yield('meta_description', 'متجر ميسو سويت (Miso Sweet) - أشهى وأطيب الحلويات والكيك الطازج يومياً بأعلى جودة وطعم استثنائي.')">
+    <meta name="keywords" content="ميسو سويت, Miso Sweet, miso sweet, متجر حلويات, كيك طازج, حلويات ميسو">
+    <meta property="og:title" content="ميسو سويت - Miso Sweet">
+    <meta property="og:description" content="متجر ميسو سويت (Miso Sweet) - أشهى وأطيب الحلويات والكيك الطازج يومياً.">
+    <meta property="og:type" content="website">
     <link rel="icon" type="image/png" href="{{ asset('Favicon.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
