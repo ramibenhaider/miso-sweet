@@ -103,6 +103,14 @@
             border: 1px solid rgba(169, 50, 38, 0.2);
         }
 
+        .alert-important {
+            background-color: #FDEDEC;
+            color: #922B21;
+            border: 1px solid #F5B7B1;
+            border-right: 4px solid #C0392B;
+            align-items: flex-start;
+        }
+
         .alert-error ul {
             margin-right: 1.2rem;
             margin-bottom: 0;
@@ -229,6 +237,14 @@
             <p>يرجى كتابة كلمة المرور الجديدة وتأكيدها لإتمام عملية تعيين الحساب.</p>
         </div>
 
+        <div class="alert alert-important">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </div>
+
         @if ($errors->any())
             <div class="alert alert-error">
                 <ul>
@@ -260,6 +276,7 @@
                     <input type="password" id="password" name="password" class="form-control" placeholder="••••••••"
                         required autocomplete="new-password">
                 </div>
+                <small style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; display: block;">(يجب أن تتكون من 8 خانات على الأقل وتتضمن حرفاً كبيراً A-Z ورمزاً خاصاً مثل @#$%)</small>
                 @error('password')
                     <span class="error-message">{{ $message }}</span>
                 @enderror

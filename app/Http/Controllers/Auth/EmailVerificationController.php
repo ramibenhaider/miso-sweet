@@ -48,6 +48,6 @@ class EmailVerificationController extends Controller
         }
         
         $request->user()->sendEmailVerificationNotification();
-        return back()->with('success', 'تم إرسال رابط التحقق من جديد');
+        return back()->with('status', 'تم إرسال رابط التحقق من جديد');
     }
 }

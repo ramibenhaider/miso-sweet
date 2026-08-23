@@ -26,7 +26,7 @@ class ForgotPasswordController extends Controller
         );
 
         return $status === Password::RESET_LINK_SENT
-            ? back()->with('status', __($status))
-            : back()->withErrors(['email' => __($status)]);
+            ? back()->with('status', 'تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني بنجاح.')
+            : back()->withErrors(['email' => 'لم نتمكن من العثور على حساب مرتبط بهذا البريد الإلكتروني.']);
     }   
 }

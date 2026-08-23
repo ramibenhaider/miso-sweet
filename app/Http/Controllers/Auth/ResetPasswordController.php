@@ -27,7 +27,26 @@ class ResetPasswordController extends Controller
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', 'min:8'],
+            'password' => [
+                'required',
+                'confirmed',
+                'min:8',
+                function ($attribute, $value, $fail) {
+                    if ($value && !preg_match('/[A-Z]/', $value)) {
+                        $fail('يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل (A-Z)');
+                    }
+                    if ($value && !preg_match('/[^\w\s]|_/', $value)) {
+                        $fail('يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل (مثل @#$%)');
+                    }
+                },
+            ],
+        ], [
+            'token.required' => 'رمز إعادة التعيين مطلوب',
+            'email.required' => 'البريد الإلكتروني مطلوب',
+            'email.email' => 'يجب إدخال بريد إلكتروني صحيح',
+            'password.required' => 'كلمة المرور مطلوبة',
+            'password.confirmed' => 'كلمتا المرور غير متطابقتين',
+            'password.min' => 'يجب ألا تقل كلمة المرور عن 8 خانات',
         ]);
 
         $status = Password::reset(
@@ -43,8 +62,8 @@ class ResetPasswordController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => __($status)]);
+            ? redirect()->route('login')->with('success', 'تمت إعادة تعيين كلمة المرور بنجاح، يمكنك الآن تسجيل الدخول.')
+            : back()->withErrors(['email' => 'رابط إعادة تعيين كلمة المرور غير صالح أو انتهت صلاحيته.']);
     }
     
 }

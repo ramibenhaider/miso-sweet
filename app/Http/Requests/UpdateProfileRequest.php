@@ -34,7 +34,22 @@ class UpdateProfileRequest extends FormRequest
                     $fail('كلمة المرور الحالية غير صحيحة');
                 }
             }],
-            'password' => 'nullable|required_with:current_password|min:8|confirmed',
+            'password' => [
+                'nullable',
+                'required_with:current_password',
+                'min:8',
+                'confirmed',
+                function ($attribute, $value, $fail) {
+                    if ($value) {
+                        if (!preg_match('/[A-Z]/', $value)) {
+                            $fail('يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل (A-Z)');
+                        }
+                        if (!preg_match('/[^\w\s]|_/', $value)) {
+                            $fail('يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل (مثل @#$%)');
+                        }
+                    }
+                },
+            ],
         ];
     }
 

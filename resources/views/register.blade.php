@@ -286,6 +286,7 @@
                     <input type="password" id="password" name="password" class="form-control" placeholder="••••••••"
                         required autocomplete="new-password">
                 </div>
+                <small style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px; display: block;">(يجب أن تتكون من 8 خانات على الأقل وتتضمن حرفاً كبيراً A-Z ورمزاً خاصاً مثل @#$%)</small>
                 @error('password')
                     <span class="error-message">{{ $message }}</span>
                 @enderror

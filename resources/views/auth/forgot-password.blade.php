@@ -104,6 +104,14 @@
             border: 1px solid rgba(30, 132, 73, 0.2);
         }
 
+        .alert-important {
+            background-color: #FDEDEC;
+            color: #922B21;
+            border: 1px solid #F5B7B1;
+            border-right: 4px solid #C0392B;
+            align-items: flex-start;
+        }
+
         .form-group {
             margin-bottom: 1.4rem;
         }
@@ -223,6 +231,17 @@
             <img src="{{ asset('Favicon.png') }}" alt="Logo" class="login-logo">
             <h2>استعادة كلمة المرور</h2>
             <p>أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور الخاصة بك.</p>
+        </div>
+
+        <div class="alert alert-important">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px;">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <div>
+                <strong>ملاحظة هامة:</strong> إذا لم يصلك إشعار البريد الإلكتروني ابحث في البريد العشوائي أو الـSpam وستجد البريد هناك. ونرجو منك الضغط على القائمة الجانبية (ثلاثة نقاط) وجعل المرسل موثوقاً، وشكراً.
+            </div>
         </div>
 
         @if (session('status'))

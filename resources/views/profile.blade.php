@@ -257,6 +257,7 @@
                 <div class="form-group-item">
                     <label for="password">كلمة المرور الجديدة:</label>
                     <input type="password" id="password" name="password" class="form-control-input" placeholder="كلمة المرور الجديدة">
+                    <small style="color: #7E6B5D; font-size: 0.8rem; margin-top: 4px; display: block;">(يجب أن تتكون من 8 خانات على الأقل وتتضمن حرفاً كبيراً A-Z ورمزاً خاصاً مثل @#$%)</small>
                     @error('password') <span class="error-msg-text">{{ $message }}</span> @enderror
                 </div>
 

@@ -36,7 +36,7 @@
             <thead>
                 <tr>
                     <th style="width: 70px;">#</th>
-                    <th>اسم القسم</th>
+                    <th style="min-width: 250px;">اسم القسم</th>
                     <th style="width: 140px;">الإجراءات</th>
                 </tr>
             </thead>
@@ -45,11 +45,11 @@
                     <tr>
                         <td><strong>#{{ $loop->iteration }}</strong></td>
                         <td>
-                            <form action="{{ route('category.update', $category->id) }}" method="POST" style="display:flex; gap: 10px; align-items: center;">
+                            <form action="{{ route('category.update', $category->id) }}" method="POST" style="display:flex; gap: 10px; align-items: center; flex-wrap: wrap; width: 100%;">
                                 @csrf
                                 @method('PUT')
-                                <input type="text" name="name" value="{{ $category->name }}" class="admin-input" style="max-width: 320px;" required>
-                                <button type="submit" class="admin-btn-primary" style="padding: 9px 18px; font-size: 0.88rem;">
+                                <input type="text" name="name" value="{{ $category->name }}" class="admin-input" style="flex: 1; min-width: 180px; width: 100%;" required>
+                                <button type="submit" class="admin-btn-primary" style="padding: 9px 18px; font-size: 0.88rem; white-space: nowrap;">
                                     <i class="fa-solid fa-pen"></i>
                                     <span>تعديل</span>
                                 </button>

@@ -25,7 +25,20 @@ class registerationRequest extends FormRequest
         return [
             'name' => 'required|string|max:150',
             'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|confirmed|min:8',
+            'password' => [
+                'required',
+                'string',
+                'confirmed',
+                'min:8',
+                function ($attribute, $value, $fail) {
+                    if ($value && !preg_match('/[A-Z]/', $value)) {
+                        $fail('يجب أن تحتوي كلمة المرور على حرف كبير واحد على الأقل (A-Z)');
+                    }
+                    if ($value && !preg_match('/[^\w\s]|_/', $value)) {
+                        $fail('يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل (مثل @#$%)');
+                    }
+                },
+            ],
             'picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ];
     }
