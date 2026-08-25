@@ -68,15 +68,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Product $product)
-    {
-        $product->load(['category', 'product_photos']);
-        return view('user.product-show', compact('product'));
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(UpdateProductRequest $request, Product $product)

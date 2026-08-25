@@ -13,13 +13,8 @@ class HomeController extends Controller
     {
         $shown_messages = Message::where('is_shown', true)->get();
         $heroSettings = Contact::first();
-        $categories = Category::has('products')->with([
-            'products' => function ($q) {
-                $q->take(4);
-            }
-        ])->get();
-        $user = auth()->check() ? auth()->user() : null;
+        $categories = Category::has('products')->get();
 
-        return view('user.home', compact('heroSettings', 'categories', 'user', 'shown_messages'));
+        return view('user.home', compact('heroSettings', 'categories', 'shown_messages'));
     }
 }

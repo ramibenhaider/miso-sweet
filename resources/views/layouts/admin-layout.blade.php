@@ -379,9 +379,15 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('about-us.edit') }}" class="admin-nav-link {{ request()->routeIs('about-us.edit') ? 'active' : '' }}">
+                            <a href="{{ route('about-us.index') }}" class="admin-nav-link {{ request()->routeIs('about-us.edit') ? 'active' : '' }}">
                                 <i class="fa-solid fa-circle-info"></i>
                                 <span>من نحن</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('home') }}" class="admin-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">
+                                <i class="fa-solid fa-home"></i>
+                                <span>الموقع</span>
                             </a>
                         </li>
                     </ul>

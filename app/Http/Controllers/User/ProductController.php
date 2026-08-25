@@ -4,10 +4,10 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\User;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
-class ProductsController extends Controller
+class ProductController extends Controller
 {
     public function index(Request $request)
     {
@@ -39,9 +39,13 @@ class ProductsController extends Controller
             $categories = Category::with('products')->get();
         }
 
-        $user = auth()->check() ? auth()->user() : null;
+        return view('user.products', compact('categories', 'search'));
+    }
 
-        return view('user.products', compact('categories', 'user', 'search'));
+    public function show(Product $product)
+    {
+        $product->load(['category', 'product_photos']);
+        return view('user.product-show', compact('product'));
     }
 
     public function search(Request $request)

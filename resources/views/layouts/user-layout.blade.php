@@ -548,7 +548,12 @@
                 <ul class="nav-menu">
                     <li><a href="{{ route('home') }}">الرئيسية</a></li>
                     <li><a href="{{ route('products') }}">المنتجات</a></li>
-                    <li><a href="{{ route('about-us') }}">من نحن</a></li>
+                    <li><a href="{{ route('user.about-us') }}">من نحن</a></li>
+                    @auth
+                        @if (auth()->user()->role == 'admin')
+                            <li><a href="{{ route('categories-contacts') }}">لوحة التحكم</a></li>
+                        @endif
+                    @endauth
                 </ul>
 
                 <div class="user-auth-section">
