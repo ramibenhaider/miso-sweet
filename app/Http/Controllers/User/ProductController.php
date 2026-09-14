@@ -21,9 +21,11 @@ class ProductController extends Controller
             $categories = Category::whereHas('products', function ($q) use ($normalizedSearch) {
                 $q->whereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, 'آ', 'ا'), 'أ', 'ا'), 'إ', 'ا'), 'ة', 'ه'), 'ى', 'ي') LIKE ?", ["%$normalizedSearch%"]);
             })->orWhereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, 'آ', 'ا'), 'أ', 'ا'), 'إ', 'ا'), 'ة', 'ه'), 'ى', 'ي') LIKE ?", ["%$normalizedSearch%"])
-            ->with(['products' => function ($q) use ($normalizedSearch) {
-                $q->whereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, 'آ', 'ا'), 'أ', 'ا'), 'إ', 'ا'), 'ة', 'ه'), 'ى', 'ي') LIKE ?", ["%$normalizedSearch%"]);
-            }])->get();
+                ->with([
+                    'products' => function ($q) use ($normalizedSearch) {
+                        $q->whereRaw("REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(name, 'آ', 'ا'), 'أ', 'ا'), 'إ', 'ا'), 'ة', 'ه'), 'ى', 'ي') LIKE ?", ["%$normalizedSearch%"]);
+                    }
+                ])->get();
 
             foreach ($categories as $category) {
                 $catNameNormalized = str_replace(['آ', 'أ', 'إ', 'ة', 'ى'], ['ا', 'ا', 'ا', 'ه', 'ي'], $category->name);
