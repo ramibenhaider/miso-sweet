@@ -4,9 +4,9 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Contracts\Services\FileStorageServiceInterface;
-use App\Services\FileStorageService;
+use App\Operations\Services\FileStorageService;
 use App\Contracts\Services\ProductServiceInterface;
-use App\Services\ProductService;
+use App\Operations\Services\ProductService;
 
 class DomainServiceProvider extends ServiceProvider
 {
