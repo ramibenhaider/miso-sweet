@@ -6,6 +6,7 @@ use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Contracts\Repositories\ProductRepositoryInterface;
 use App\Contracts\Services\FileStorageServiceInterface;
 use App\Contracts\Services\ProductServiceInterface;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -27,7 +28,9 @@ class ProductService implements ProductServiceInterface
 
     public function getAllProducts(): Collection
     {
-        return $this->productRepository->all();
+        return Cache::store('redis')->rememberForever('admin_products', function () {
+            return $this->productRepository->all();
+        });
     }
 
     public function getAllCategories(): Collection
@@ -49,6 +52,9 @@ class ProductService implements ProductServiceInterface
                 $this->productRepository->addPhoto($product, $photoPath);
             }
         }
+
+        Cache::store('redis')->forget('admin_products');
+        Cache::store('redis')->forget('user_categories_with_products');
 
         return $product;
     }
@@ -73,6 +79,9 @@ class ProductService implements ProductServiceInterface
             }
         }
 
+        Cache::store('redis')->forget('admin_products');
+        Cache::store('redis')->forget('user_categories_with_products');
+
         return true;
     }
 
@@ -86,6 +95,13 @@ class ProductService implements ProductServiceInterface
             $this->fileStorageService->delete($photo->photo);
         }
 
-        return $this->productRepository->delete($product->id);
+        $deleted = $this->productRepository->delete($product->id);
+
+        if ($deleted) {
+            Cache::store('redis')->forget('admin_products');
+            Cache::store('redis')->forget('user_categories_with_products');
+        }
+
+        return $deleted;
     }
 }

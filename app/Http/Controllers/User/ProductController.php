@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -38,7 +39,9 @@ class ProductController extends Controller
                 return $category->products->count() > 0;
             });
         } else {
-            $categories = Category::with('products')->get();
+            $categories = Cache::store('redis')->rememberForever('user_categories_with_products', function () {
+                return Category::with('products')->get();
+            });
         }
 
         return view('user.products', compact('categories', 'search'));
