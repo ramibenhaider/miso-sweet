@@ -39,7 +39,7 @@ class ProductController extends Controller
                 return $category->products->count() > 0;
             });
         } else {
-            $categories = Cache::store('redis')->rememberForever('user_categories_with_products', function () {
+            $categories = Cache::rememberForever('user_categories_with_products', function () {
                 return Category::with('products')->get();
             });
         }

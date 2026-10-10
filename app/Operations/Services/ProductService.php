@@ -26,16 +26,16 @@ class ProductService implements ProductServiceInterface
         $this->fileStorageService = $fileStorageService;
     }
 
-    public function getAllProducts(): Collection
+    public function getAllProducts(): array
     {
-        return Cache::store('redis')->rememberForever('admin_products', function () {
-            return $this->productRepository->all();
+        return Cache::rememberForever('admin_products', function () {
+            return $this->productRepository->all()->toArray();
         });
     }
 
-    public function getAllCategories(): Collection
+    public function getAllCategories(): array
     {
-        return $this->categoryRepository->all();
+        return $this->categoryRepository->all()->toArray();
     }
 
     public function createProduct(array $data, ?object $image, ?array $otherPhotos): Product
@@ -53,8 +53,8 @@ class ProductService implements ProductServiceInterface
             }
         }
 
-        Cache::store('redis')->forget('admin_products');
-        Cache::store('redis')->forget('user_categories_with_products');
+        Cache::forget('admin_products');
+        Cache::forget('user_categories_with_products');
 
         return $product;
     }
@@ -79,8 +79,8 @@ class ProductService implements ProductServiceInterface
             }
         }
 
-        Cache::store('redis')->forget('admin_products');
-        Cache::store('redis')->forget('user_categories_with_products');
+        Cache::forget('admin_products');
+        Cache::forget('user_categories_with_products');
 
         return true;
     }
@@ -98,8 +98,8 @@ class ProductService implements ProductServiceInterface
         $deleted = $this->productRepository->delete($product->id);
 
         if ($deleted) {
-            Cache::store('redis')->forget('admin_products');
-            Cache::store('redis')->forget('user_categories_with_products');
+            Cache::forget('admin_products');
+            Cache::forget('user_categories_with_products');
         }
 
         return $deleted;
