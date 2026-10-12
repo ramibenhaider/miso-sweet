@@ -13,7 +13,7 @@ Route::get('/login', fn () => view('login'))->name('login');
 Route::post('/login', [LoginAndLogoutController::class, 'doLogin'])->name('doLogin');
 
 Route::get('/register', fn () => view('register'))->name('register');
-Route::post('/register', [RegistrationController::class, 'store'])->name('register');
+Route::post('/register', [RegistrationController::class, 'store'])->name('doRegister');
 
 Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])

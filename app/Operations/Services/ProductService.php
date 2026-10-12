@@ -6,9 +6,9 @@ use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\Contracts\Repositories\ProductRepositoryInterface;
 use App\Contracts\Services\FileStorageServiceInterface;
 use App\Contracts\Services\ProductServiceInterface;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Collection;
 
 class ProductService implements ProductServiceInterface
 {
@@ -38,7 +38,7 @@ class ProductService implements ProductServiceInterface
         return $this->categoryRepository->all()->toArray();
     }
 
-    public function createProduct(array $data, ?object $image, ?array $otherPhotos): Product
+    public function createProduct(array $data, ?UploadedFile $image, ?array $otherPhotos): Product
     {
         if ($image) {
             $data['image'] = $this->fileStorageService->store($image, 'products');
@@ -59,7 +59,7 @@ class ProductService implements ProductServiceInterface
         return $product;
     }
 
-    public function updateProduct(Product $product, array $data, ?object $image, ?array $otherPhotos): bool
+    public function updateProduct(Product $product, array $data, ?UploadedFile $image, ?array $otherPhotos): bool
     {
         if ($image) {
             if ($product->image) {
@@ -105,3 +105,5 @@ class ProductService implements ProductServiceInterface
         return $deleted;
     }
 }
+
+

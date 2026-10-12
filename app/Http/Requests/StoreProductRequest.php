@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class StoreProductRequest extends FormRequest
 {
@@ -12,7 +12,14 @@ class StoreProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->role === 'admin';
+    }
+
+    protected function failedAuthorization(): void
+    {
+        throw new HttpResponseException(
+            redirect()->route('login')
+        );
     }
 
     /**

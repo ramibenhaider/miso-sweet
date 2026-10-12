@@ -7,7 +7,6 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Contracts\Services\ProductServiceInterface;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -27,14 +26,6 @@ class ProductController extends Controller
         $categories = $this->productService->getAllCategories();
         
         return view('admin.products', compact('products', 'categories'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
