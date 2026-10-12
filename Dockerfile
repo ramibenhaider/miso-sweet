@@ -1,4 +1,3 @@
-
 FROM node:20-alpine AS frontend
 WORKDIR /app
 
@@ -9,6 +8,7 @@ COPY resources ./resources
 COPY vite.config.js ./
 COPY public ./public
 RUN npm run build
+
 
 FROM php:8.2-fpm
 
@@ -36,9 +36,11 @@ WORKDIR /var/www/html
 
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --no-plugins --no-scripts --prefer-dist
+
 COPY . .
 
 COPY --from=frontend /app/public/build ./public/build
+
 RUN composer dump-autoload --optimize --no-dev
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
@@ -52,4 +54,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 80
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/usr/local/bin/entrypoint.sh"]
