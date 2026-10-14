@@ -8,7 +8,9 @@ use App\Contracts\Services\FileStorageServiceInterface;
 use App\Contracts\Services\ProductServiceInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductService implements ProductServiceInterface
 {
@@ -29,7 +31,7 @@ class ProductService implements ProductServiceInterface
     public function getAllProducts(): array
     {
         return Cache::rememberForever('admin_products', function () {
-            return $this->productRepository->all()->toArray();
+            return $this->productRepository->all();
         });
     }
 
@@ -38,26 +40,46 @@ class ProductService implements ProductServiceInterface
         return $this->categoryRepository->all()->toArray();
     }
 
-    public function createProduct(array $data, ?UploadedFile $image, ?array $otherPhotos): Product
-    {
+public function createProduct(array $data, ?UploadedFile $image, ?array $otherPhotos): Product
+{
+    $uploadedFiles = [];
+
+    try {
         if ($image) {
             $data['image'] = $this->fileStorageService->store($image, 'products');
+            $uploadedFiles[] = $data['image'];
         }
-
-        $product = $this->productRepository->create($data);
 
         if ($otherPhotos) {
             foreach ($otherPhotos as $photo) {
-                $photoPath = $this->fileStorageService->store($photo, 'products/photos');
-                $this->productRepository->addPhoto($product, $photoPath);
+                $uploadedFiles[] = $this->fileStorageService->store($photo, 'products/photos');
             }
         }
+
+        $product = DB::transaction(function () use ($data, $uploadedFiles) {
+            $product = $this->productRepository->create($data);
+
+            $photoOffset = isset($data['image']) ? 1 : 0;
+            foreach (array_slice($uploadedFiles, $photoOffset) as $photoPath) {
+                $this->productRepository->addPhoto($product, $photoPath);
+            }
+
+            return $product;
+        });
 
         Cache::forget('admin_products');
         Cache::forget('user_categories_with_products');
 
         return $product;
+
+    } catch (\Throwable $e) {
+        foreach ($uploadedFiles as $path) {
+            $this->fileStorageService->delete($path);
+        }
+        throw $e;
     }
+}
+
 
     public function updateProduct(Product $product, array $data, ?UploadedFile $image, ?array $otherPhotos): bool
     {

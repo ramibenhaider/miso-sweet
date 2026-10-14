@@ -77,7 +77,7 @@
             </div>
 
             <div>
-                <label for="other_photos">صور إضافية للمنتج:</label>
+                <label for="other_photos">صور إضافية للمنتج (اختياري):</label>
                 <input type="file" id="other_photos" name="other_photos[]" accept="image/*" class="admin-input" multiple>
                 @error('other_photos') <span style="color: #DC2626; font-size: 0.82rem; font-weight: 600;">{{ $message }}</span> @enderror
             </div>

@@ -4,6 +4,7 @@ namespace App\Contracts\Services;
 
 use App\Models\Product;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Database\Eloquent\Collection;
 
 interface ProductServiceInterface
 {

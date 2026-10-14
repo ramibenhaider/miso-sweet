@@ -503,30 +503,6 @@
                             </div>
                         </div>
                     @endforeach
-
-                    {{-- Duplicate loop for seamless infinite smooth marquee scrolling --}}
-                    @foreach($shown_messages as $msg)
-                        <div class="message-testimonial-card">
-                            <div class="message-card-header">
-                                <div class="message-user-info">
-                                    <img src="{{ $msg->user && $msg->user->picture ? asset('storage/' . $msg->user->picture) : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' fill='%238B5A2B' viewBox='0 0 24 24'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>" }}"
-                                         alt="صورة العميل" class="message-user-avatar">
-                                    <div>
-                                        <h4 class="message-user-name">{{ $msg->user ? $msg->user->name : 'عميل ميسو سويت' }}</h4>
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-quote-right quote-icon"></i>
-                            </div>
-
-                            <div class="message-card-body">
-                                {{ $msg->message }}
-                            </div>
-
-                            <div class="message-card-footer">
-                                <span><i class="fa-regular fa-clock" style="margin-left: 4px;"></i> {{ $msg->created_at ? $msg->created_at->locale('ar')->diffForHumans() : '' }}</span>
-                            </div>
-                        </div>
-                    @endforeach
                 </div>
             </div>
         </div>
