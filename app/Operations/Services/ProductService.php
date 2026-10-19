@@ -2,42 +2,45 @@
 
 namespace App\Operations\Services;
 
-use App\Contracts\Repositories\CategoryRepositoryInterface;
-use App\Contracts\Repositories\ProductRepositoryInterface;
-use App\Contracts\Services\FileStorageServiceInterface;
 use App\Contracts\Services\ProductServiceInterface;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
+use App\Contracts\Repositories\ProductRepositoryInterface;
+use App\Contracts\Repositories\CategoryRepositoryInterface;
+use App\Contracts\Services\FileStorageServiceInterface;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\ProductPhoto;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class ProductService implements ProductServiceInterface
 {
-    protected ProductRepositoryInterface $productRepository;
-    protected CategoryRepositoryInterface $categoryRepository;
-    protected FileStorageServiceInterface $fileStorageService;
+
+    protected $fileStorageService;
+    protected $productRepository;
+    protected $categoryRepository;
 
     public function __construct(
+        FileStorageServiceInterface $fileStorageService,
         ProductRepositoryInterface $productRepository,
-        CategoryRepositoryInterface $categoryRepository,
-        FileStorageServiceInterface $fileStorageService
+        CategoryRepositoryInterface $categoryRepository
     ) {
+        $this->fileStorageService = $fileStorageService;
         $this->productRepository = $productRepository;
         $this->categoryRepository = $categoryRepository;
-        $this->fileStorageService = $fileStorageService;
     }
 
     public function getAllProducts(): array
     {
-        return Cache::rememberForever('admin_products', function () {
-            return $this->productRepository->all();
+        return Cache::rememberForever('products', function () {
+            return $this->productRepository->all()->toArray();
         });
     }
 
     public function getAllCategories(): array
     {
-        return $this->categoryRepository->all()->toArray();
+        return Cache::rememberForever('categories', function () {
+            return $this->categoryRepository->all()->toArray();
+        });
     }
 
 public function createProduct(array $data, ?UploadedFile $image, ?array $otherPhotos): Product
@@ -67,8 +70,8 @@ public function createProduct(array $data, ?UploadedFile $image, ?array $otherPh
             return $product;
         });
 
-        Cache::forget('admin_products');
-        Cache::forget('user_categories_with_products');
+        Cache::forget('products');
+        Cache::forget('categories');
 
         return $product;
 
@@ -96,13 +99,12 @@ public function createProduct(array $data, ?UploadedFile $image, ?array $otherPh
 
         if ($otherPhotos) {
             foreach ($otherPhotos as $photo) {
-                $photoPath = $this->fileStorageService->store($photo, 'products/photos');
-                $this->productRepository->addPhoto($product, $photoPath);
+                $this->productRepository->addPhoto($product, $this->fileStorageService->store($photo, 'products/photos'));
             }
         }
 
-        Cache::forget('admin_products');
-        Cache::forget('user_categories_with_products');
+        Cache::forget('products');
+        Cache::forget('categories');
 
         return true;
     }
@@ -117,15 +119,28 @@ public function createProduct(array $data, ?UploadedFile $image, ?array $otherPh
             $this->fileStorageService->delete($photo->photo);
         }
 
-        $deleted = $this->productRepository->delete($product->id);
+        $this->productRepository->delete($product->id);
 
-        if ($deleted) {
-            Cache::forget('admin_products');
-            Cache::forget('user_categories_with_products');
+        Cache::forget('products');
+        Cache::forget('categories');
+
+        return true;
+        
+    }
+
+    public function deleteProductPhoto(ProductPhoto $productPhoto): bool
+    {
+        if ($productPhoto->photo) {
+
+            $this->fileStorageService->delete($productPhoto->photo);
+        } else {
+            return false;
         }
 
-        return $deleted;
+        $productPhoto->delete();
+
+        Cache::forget('products');
+
+        return true;
     }
 }
-
-

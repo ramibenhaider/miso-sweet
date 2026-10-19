@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Admin\ProductPhotoController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\AboutUsController;
@@ -18,7 +17,7 @@ Route::resource('category', CategoryController::class)->only('update', 'store', 
 Route::resource('contact', ContactController::class)->only('update');
 Route::resource('product', ProductController::class)->except(['show', 'create', 'edit']);
 
-Route::delete('product-photo/{productPhoto}', [ProductPhotoController::class, 'destroy'])->name('product-photo.destroy');
+Route::delete('product-photo/{productPhoto}', [ProductController::class, 'destroyPhoto'])->name('product-photo.destroy');
 
 Route::resource('users', UserController::class)->only('index', 'destroy');
 Route::patch('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');

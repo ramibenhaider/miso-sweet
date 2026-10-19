@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
+use App\Models\ProductPhoto;
 use App\Contracts\Services\ProductServiceInterface;
 
 class ProductController extends Controller
@@ -70,5 +71,11 @@ class ProductController extends Controller
     {
         $this->productService->deleteProduct($product);
         return redirect()->back()->with('success', 'تم حذف المنتج بنجاح');
+    }
+
+    public function destroyPhoto(ProductPhoto $productPhoto)
+    {
+        $this->productService->deleteProductPhoto($productPhoto);
+        return redirect()->back()->with('success', 'تم حذف الصورة بنجاح');
     }
 }
