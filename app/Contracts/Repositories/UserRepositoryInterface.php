@@ -6,5 +6,5 @@ use App\Models\User;
 
 interface UserRepositoryInterface
 {
-    public function find(int ): ?User;
+    public function find(int $id): ?User;
 }
