@@ -40,11 +40,4 @@ class ProductRepository implements ProductRepositoryInterface
         }
         return false;
     }
-
-    public function addPhoto(Product $product, string $photoPath): void
-    {
-        $product->product_photos()->create([
-            'photo' => $photoPath,
-        ]);
-    }
 }

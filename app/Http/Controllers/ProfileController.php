@@ -5,17 +5,28 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use App\Contracts\Services\UserServiceInterface;
 
 class ProfileController extends Controller
 {
+    protected UserServiceInterface $userService;
+
+    public function __construct(UserServiceInterface $userService) {
+        $this->userService = $userService;
+    }
+
     public function edit($id)
     {
+        $this->userService->checkIfAutorizedUser($id);
+        
         $user = User::findOrFail($id);
         return view('profile', compact('user'));
     }
 
     public function update(UpdateProfileRequest $request, User $user)
     {
+        $this->userService->checkIfAutorizedUser($user->id);
+
         $validated = $request->validated();
 
         $user->name = $validated['name'];

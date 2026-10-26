@@ -13,6 +13,7 @@ interface ProductServiceInterface
     public function createProduct(array $data, ?UploadedFile $image, ?array $otherPhotos): Product;
     public function updateProduct(Product $product, array $data, ?UploadedFile $image, ?array $otherPhotos): bool;
     public function deleteProduct(Product $product): bool;
+    public function addProductPhoto(Product $product, string $photoPath): void;
     public function deleteProductPhoto(ProductPhoto $productPhoto): bool;
 }
 
